@@ -1,5 +1,10 @@
 from PIL import Image, ImageChops, ImageEnhance
 import itertools
+# Number list
+one=[]
+
+
+
 im = Image.open("f.jpg")
 img = im.convert("RGB")
 pixdata = img.load()
@@ -37,11 +42,26 @@ for i in nums:
         gren.append(i)
 for i in gren:
     nums.remove(i)
-for i in nums:
-    x,y=i
-    for l in range(x,y):
-        pixdata[l, 11] = (255, 53, 53)
+# for i in nums:
+#     x,y=i
+#     for l in range(x,y):
+#         pixdata[l, 11] = (255, 53, 53)
 # dump=img.crop((left, 0, right, img.size[1])).save('dump.jpg', quality=100)
+
+
+# for i in nums:
+#     incrementy = img.size[1] / 4
+#     onenum,secnum=i
+#     incrementx = (secnum-onenum)/4
+#     basicx = incrementx
+#     for x in range(4):
+#         basey=incrementy
+#         for y in range(4):
+#             pixdata[onenum + basicx-incrementx/2, 0+basey-incrementy/2] = (255, 53, 53)
+#             basey+=incrementy
+#             print(basey)
+#         basicx+=incrementx
 print(nums)
 img.show()
+
 
