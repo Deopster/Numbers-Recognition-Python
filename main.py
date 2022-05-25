@@ -79,7 +79,7 @@ def detect(f,mode):
     #     x,y=i
     #     for l in range(x,y):
     #         pixdata[l, 11] = (255, 53, 53)
-
+    #
 
     # for i in nums:
     #     incrementy = img.size[1] / 4
@@ -127,9 +127,10 @@ def detect(f,mode):
 
     return int(recognit)
 
-    # if __name__ == '__main__':
-    #     print("Выберите режим 0-обучение 1-распознавание")
-    #     mode=input()
+if __name__ == '__main__':
+    f = Image.open("f1.jpg")
+    fin=detect(f, 1)
+    print(fin)
 
 
 
