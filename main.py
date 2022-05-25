@@ -1,8 +1,7 @@
 from PIL import Image, ImageChops, ImageEnhance
 import itertools
 # Number list
-def detect(f,mode):
-    numbers=[
+numbers=[
     [1,[0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]],
     [4,[0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0]],
     [4,[0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0]],
@@ -22,16 +21,11 @@ def detect(f,mode):
     [0,[0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1]],
     [0,[0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1]],
     [4,[0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0]],
+    [0,[0]]
     ]
 
-    numbers2=[
-        [1,[0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1]],
-        [0,[0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1]],
-        [1,[0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1]],
-        [0,[0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1]],
-        [0,[0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1]]
-    ]
-
+def detect(f):
+    scale=4
     recognit=""
     img = f.convert("RGB")
     pixdata = img.load()
@@ -70,39 +64,24 @@ def detect(f,mode):
     for i in gren:
         nums.remove(i)
 
-    # for i in nums:
-    #     x,y=i
-    #     for l in range(x,y):
-    #         pixdata[l, 11] = (255, 53, 53)
+    #Отображение коробок букв
 
     # for i in nums:
     #     x,y=i
     #     for l in range(x,y):
     #         pixdata[l, 11] = (255, 53, 53)
-    #
-
-    # for i in nums:
-    #     incrementy = img.size[1] / 4
-    #     onenum,secnum=i
-    #     incrementx = (secnum-onenum)/4
-    #     basicx = incrementx
-    #     for x in range(4):
-    #         basey=incrementy
-    #         for y in range(4):
-    #             pixdata[onenum + basicx-incrementx/2, 0+basey-incrementy/2] = (255, 53, 53)
-    #             basey+=incrementy
-    #             print(basey)
-    #         basicx+=incrementx
     # img.show()
+
+    #конец блока
     for i in nums:
         index=0
-        incrementy = img.size[1] / 4
+        incrementy = img.size[1] / scale
         onenum,secnum=i
-        incrementx = (secnum-onenum)/4
+        incrementx = (secnum-onenum)/scale
         basicx = incrementx
-        for x in range(4):
+        for x in range(scale):
             basey=incrementy
-            for y in range(4):
+            for y in range(scale):
                 if pixdata[onenum + basicx-incrementx/2, 0+basey-incrementy/2] == (0, 0, 0):
                     temp.append(1)
                 else:
@@ -112,25 +91,30 @@ def detect(f,mode):
         index+=1
         res.append(temp)
         temp=[]
-    if mode==1:
-        for i in res:
-            for n in numbers:
-                for s in n:
-                    if i == s:
-                        recognit+=str(n[0])
-    else:
-        for i in res:
-            for n in numbers2:
-                for s in n:
-                    if i == s:
-                        recognit+=str(n[0])
-
-    return int(recognit)
+    f = open('traindata.txt', 'a')
+    f.write("\n" + "------ Scale = "+str(scale) + "\n");
+    f.close()
+    for i in res:
+        found = False
+        for n in numbers:
+            if found is False:
+                pass
+            if n == numbers[len(numbers) - 1] and found is False:
+                recognit += '*'
+                f = open('traindata.txt', 'a')
+                f.write('[*' + ',' + str(n[1]) + '],' + "\n");
+                f.close()
+            for s in n:
+                if i == s:
+                    recognit += str(n[0])
+                    f = open('traindata.txt', 'a')
+                    f.write('[' + str(n[0]) + ',' + str(n[1]) + '],' + "\n");
+                    f.close()
+                    found = True
+    return recognit
 
 if __name__ == '__main__':
-    f = Image.open("f1.jpg")
-    fin=detect(f, 1)
-    print(fin)
 
-
+    f = Image.open("f3.jpg")
+    print(detect(f))
 
